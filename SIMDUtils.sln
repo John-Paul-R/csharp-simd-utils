@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SIMDUtils", "SIMDUtils\SIMDUtils.csproj", "{098C4C82-BA75-4858-9771-6858162CEBBE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmarks", "Benchmarks\Benchmarks.csproj", "{87F2A6A0-3BE4-472B-8A16-804B61608C49}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{098C4C82-BA75-4858-9771-6858162CEBBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{098C4C82-BA75-4858-9771-6858162CEBBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{098C4C82-BA75-4858-9771-6858162CEBBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{098C4C82-BA75-4858-9771-6858162CEBBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87F2A6A0-3BE4-472B-8A16-804B61608C49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87F2A6A0-3BE4-472B-8A16-804B61608C49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87F2A6A0-3BE4-472B-8A16-804B61608C49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87F2A6A0-3BE4-472B-8A16-804B61608C49}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
