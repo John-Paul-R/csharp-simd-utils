@@ -28,7 +28,7 @@ public class Vectorizer
         }
 
         Span<T> remaining = stackalloc T[vecSize];
-        arr.AsSpan()[lastI..].CopyTo(remaining);
+        arr.AsSpan(lastI).CopyTo(remaining);
         Vector<T> lastVec = new Vector<T>(remaining);
         lastVec = selector.Invoke(lastVec);
 
