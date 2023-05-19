@@ -11,7 +11,7 @@ public class Vectorizer
 {
     // select using the value delegate idea
     public static void Select<T, TFunc>(T[] arr, TFunc selector)
-    where T : struct, INumber<T>
+    where T : unmanaged, INumber<T>
     where TFunc : struct, IFunc<Vector<T>, Vector<T>>
     {
         var vecSize = Vector<T>.Count;
@@ -27,8 +27,8 @@ public class Vectorizer
             return;
         }
 
-        T[] remaining = new T[vecSize];
-        Array.Copy(arr, lastI, remaining, 0, extraLen);
+        Span<T> remaining = stackalloc T[vecSize];
+        arr.AsSpan()[lastI..].CopyTo(remaining);
         Vector<T> lastVec = new Vector<T>(remaining);
         lastVec = selector.Invoke(lastVec);
 

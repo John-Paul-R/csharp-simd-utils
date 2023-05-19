@@ -27,17 +27,17 @@ using SimdUtils;
 // |              EquivalentLinq | 92.151 us | 0.4228 us | 0.3748 us | 0.3662 |  32.35 KB |
 // |     ImperativeSeparateLoops | 16.529 us | 0.1017 us | 0.0951 us | 0.3662 |  32.02 KB |
 
-// |                                       Method |       Mean |     Error |    StdDev |     Median |   Gen0 | Allocated |
-// |--------------------------------------------- |-----------:|----------:|----------:|-----------:|-------:|----------:|
-// |                             VectorizerMutate |  17.094 us | 0.2039 us | 0.1808 us |  17.113 us | 0.4578 |  39.26 KB |
-// |          VectorizerMutate_AggressiveInlining |   8.553 us | 0.0788 us | 0.0737 us |   8.547 us | 0.4730 |  39.26 KB |
-// | VectorizerMutate_Combined_AggressiveInlining |   7.169 us | 0.1427 us | 0.4024 us |   7.161 us | 0.4730 |  39.15 KB |
-// |                               ImperativeSimd |   6.163 us | 0.1231 us | 0.2779 us |   6.016 us | 0.4730 |  39.09 KB |
-// |                  ImperativeSeparateLoopsSimd |   8.584 us | 0.1696 us | 0.1666 us |   8.560 us | 0.4730 |  39.09 KB |
-// |                         ImperativeSimpleLoop |  12.453 us | 0.2189 us | 0.3948 us |  12.272 us | 0.4730 |  39.09 KB |
-// |                               VectorPipeline |  23.414 us | 0.1415 us | 0.1255 us |  23.389 us | 0.4578 |  39.09 KB |
-// |                               EquivalentLinq | 113.626 us | 0.5577 us | 0.4944 us | 113.697 us | 0.3662 |  39.42 KB |
-// |                      ImperativeSeparateLoops |  20.104 us | 0.0791 us | 0.0661 us |  20.079 us | 0.4578 |  39.09 KB |
+// |                                       Method |       Mean |     Error |    StdDev |   Gen0 | Allocated |
+// |--------------------------------------------- |-----------:|----------:|----------:|-------:|----------:|
+// |                             VectorizerMutate |  18.425 us | 0.3661 us | 0.7560 us | 0.4578 |  39.09 KB |
+// |          VectorizerMutate_AggressiveInlining |  11.850 us | 0.2326 us | 0.2678 us | 0.4730 |  39.09 KB |
+// | VectorizerMutate_Combined_AggressiveInlining |   8.262 us | 0.1346 us | 0.1193 us | 0.4730 |  39.09 KB |
+// |                               ImperativeSimd |   6.229 us | 0.0890 us | 0.0832 us | 0.4730 |  39.09 KB |
+// |                  ImperativeSeparateLoopsSimd |   8.972 us | 0.1728 us | 0.1617 us | 0.4730 |  39.09 KB |
+// |                         ImperativeSimpleLoop |  12.601 us | 0.1820 us | 0.1702 us | 0.4730 |  39.09 KB |
+// |                               VectorPipeline |  24.421 us | 0.2453 us | 0.2294 us | 0.4578 |  39.09 KB |
+// |                               EquivalentLinq | 116.211 us | 0.6167 us | 0.5467 us | 0.3662 |  39.42 KB |
+// |                      ImperativeSeparateLoops |  21.152 us | 0.2030 us | 0.1800 us | 0.4578 |  39.09 KB |
 
 
 BenchmarkRunner.Run<Bench>();
