@@ -101,9 +101,9 @@ public class Bench_Scratch
     {
         var ret = _values.ToArray();
 
-        Vectorizer.Select(ret, new TimesFiveSelector());
-        Vectorizer.Select(ret, new AddFiveSelector());
-        Vectorizer.Select(ret, new DivByFiveSelector());
+        Vectorizer.Select(ret.AsSpan(), new TimesFiveSelector());
+        Vectorizer.Select(ret.AsSpan(), new AddFiveSelector());
+        Vectorizer.Select(ret.AsSpan(), new DivByFiveSelector());
 
         return ret;
     }
@@ -113,9 +113,9 @@ public class Bench_Scratch
     {
         var ret = _values.ToArray();
 
-        Vectorizer.Select(ret, new TimesFiveSelector_AggressiveInlining());
-        Vectorizer.Select(ret, new AddFiveSelector_AggressiveInlining());
-        Vectorizer.Select(ret, new DivByFiveSelector_AggressiveInlining());
+        Vectorizer.Select(ret.AsSpan(), new TimesFiveSelector_AggressiveInlining());
+        Vectorizer.Select(ret.AsSpan(), new AddFiveSelector_AggressiveInlining());
+        Vectorizer.Select(ret.AsSpan(), new DivByFiveSelector_AggressiveInlining());
 
         return ret;
     }
@@ -125,7 +125,7 @@ public class Bench_Scratch
     {
         var ret = _values.ToArray();
 
-        Vectorizer.SelectStackallocSpan(ret, new CombinedSelector_AggressiveInlining());
+        Vectorizer.Select(ret.AsSpan(), new CombinedSelector_AggressiveInlining());
 
         return ret;
     }
