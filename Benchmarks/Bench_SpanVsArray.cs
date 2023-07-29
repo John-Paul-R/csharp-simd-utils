@@ -27,6 +27,27 @@ namespace Benchmarks;
 // |                    Array | 10001 | 7,497.83 ns | 143.720 ns | 171.089 ns | 0.4730 |   40088 B |
 // |           StackallocSpan | 10001 | 7,425.76 ns |  84.308 ns |  74.737 ns | 0.4730 |   40032 B |
 
+// Ah. I was including the TArray in the benchmark. That was most of the time. E: nope, not true, wtf am I seeing here?
+// |                        Method | Count |      Mean |     Error |    StdDev |    Median | Allocated |
+// |------------------------------ |------ |----------:|----------:|----------:|----------:|----------:|
+// |      Reference_ImperativeSimd | 10001 | 12.706 us | 0.5144 us | 1.5006 us | 12.930 us |   40968 B |
+// |                         Array | 10001 | 16.751 us | 0.9815 us | 2.7845 us | 15.108 us |     992 B |
+// |                StackallocSpan | 10001 |  3.296 us | 0.0695 us | 0.1679 us |  3.236 us |     936 B |
+// |                      FullSpan | 10001 |  3.438 us | 0.0461 us | 0.0360 us |  3.421 us |     936 B |
+// |          Array_InstanceMember | 10001 | 17.149 us | 0.2935 us | 0.2451 us | 17.098 us |     992 B |
+// | StackallocSpan_InstanceMember | 10001 |  3.212 us | 0.0679 us | 0.0859 us |  3.185 us |     936 B |
+
+// aha, [IterationSetup] is cursed, don't use it for microbenchmarks
+// |                        Method | Count |     Mean |     Error |    StdDev | Allocated |
+// |------------------------------ |------ |---------:|----------:|----------:|----------:|
+// |   Reference_ImperativeForLoop | 10001 | 9.032 us | 0.0990 us | 0.0926 us |         - |
+// |      Reference_ImperativeSimd | 10001 | 2.362 us | 0.0466 us | 0.0779 us |         - |
+// |                         Array | 10001 | 3.060 us | 0.0195 us | 0.0182 us |      56 B |
+// |                StackallocSpan | 10001 | 3.036 us | 0.0126 us | 0.0118 us |         - |
+// |                      FullSpan | 10001 | 3.113 us | 0.0602 us | 0.0694 us |         - |
+// |          Array_InstanceMember | 10001 | 3.044 us | 0.0077 us | 0.0068 us |      56 B |
+// | StackallocSpan_InstanceMember | 10001 | 3.039 us | 0.0048 us | 0.0038 us |         - |
+
 [MemoryDiagnoser]
 public class Bench_SpanVsArray
 {
@@ -37,6 +58,8 @@ public class Bench_SpanVsArray
     private static Random _rand = null!;
     private float[] _values = null!;
 
+    private float[] _valuesForBench = null!;
+
     [GlobalSetup]
     public void GlobalSetup()
     {
@@ -44,6 +67,19 @@ public class Bench_SpanVsArray
         _values = Enumerable.Range(0, Count)
             .Select(_ => _rand.NextSingle())
             .ToArray();
+        _valuesForBench = _values.ToArray();
+    }
+
+    [Benchmark]
+    public object Reference_ImperativeForLoop()
+    {
+        var ret = _valuesForBench;
+
+        for (int i = 0; i < _valuesForBench.Length; i++) {
+            ret[i] = (_valuesForBench[i] * 5 + 5) / 5;
+        }
+
+        return ret;
     }
 
     [Benchmark]
@@ -51,17 +87,17 @@ public class Bench_SpanVsArray
     {
         int vecSize = Vector<float>.Count;
         Vector<float> vectorFives = new(5F);
-        float[] ret = new float[_values.Length];
+        float[] ret = _valuesForBench;
 
-        int extraLen = _values.Length % vecSize;
-        int vectorizableCount = _values.Length - extraLen;
+        int extraLen = _valuesForBench.Length % vecSize;
+        int vectorizableCount = _valuesForBench.Length - extraLen;
         for (int i = 0; i < vectorizableCount; i += vecSize) {
-            var vec = new Vector<float>(_values, i);
+            var vec = new Vector<float>(_valuesForBench, i);
             ((vec * 5 + vectorFives) / vectorFives).CopyTo(ret, i);
         }
 
-        for (int i = vectorizableCount; i < _values.Length; i++) {
-            ret[i] = (_values[i] * 5 + 5) / 5;
+        for (int i = vectorizableCount; i < _valuesForBench.Length; i++) {
+            ret[i] = (_valuesForBench[i] * 5 + 5) / 5;
         }
 
         return ret;
@@ -70,7 +106,7 @@ public class Bench_SpanVsArray
     [Benchmark]
     public object Array()
     {
-        var ret = _values.ToArray();
+        var ret = _valuesForBench;
 
         Vectorizer.Select(ret, new CombinedSelector_AggressiveInlining());
 
@@ -80,7 +116,7 @@ public class Bench_SpanVsArray
     [Benchmark]
     public object StackallocSpan()
     {
-        var ret = _values.ToArray();
+        var ret = _valuesForBench;
 
         Vectorizer.SelectStackallocSpan(ret, new CombinedSelector_AggressiveInlining());
 
@@ -88,9 +124,19 @@ public class Bench_SpanVsArray
     }
 
     [Benchmark]
+    public object FullSpan()
+    {
+        var ret = _valuesForBench;
+
+        Vectorizer.SelectFullSpan(ret.AsSpan(), new CombinedSelector_AggressiveInlining());
+
+        return ret;
+    }
+
+    [Benchmark]
     public object Array_InstanceMember()
     {
-        var ret = _values.ToArray();
+        var ret = _valuesForBench;
 
         Vectorizer.Select(ret, new CombinedSelector_AggressiveInlining_InstanceMember());
 
@@ -100,7 +146,7 @@ public class Bench_SpanVsArray
     [Benchmark]
     public object StackallocSpan_InstanceMember()
     {
-        var ret = _values.ToArray();
+        var ret = _valuesForBench;
 
         Vectorizer.SelectStackallocSpan(ret, new CombinedSelector_AggressiveInlining_InstanceMember());
 
